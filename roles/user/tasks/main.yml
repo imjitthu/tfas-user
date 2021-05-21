@@ -1,0 +1,41 @@
+- name: User App user
+  user:
+    name: roboshop
+    comment: RoboShop user
+
+- name: Download and Extract Artifacts
+  copy:
+    src: files/
+    dest: /home/roboshop/{{COMPONENT}}
+
+- name: Installing NodeJs Package Manager
+  yum:
+    name: npm
+    state: present
+
+- name: Download NodeJS dependencies
+  shell: npm install
+  args:
+    chdir: /home/roboshop/{{COMPONENT}}
+
+# - name: Installing NodeJS dependencies
+#   shell: |
+#     cd /home/roboshop/{{COMPONENT}}
+#     npm install
+
+# - name: Installing NodeJS dependencies
+#   npm:
+#     path: /home/roboshop/{{COMPONENT}}
+#     state: latest
+
+- name: Add {{COMPONENT}} service file
+  template:
+    src: user.service
+    dest: /etc/systemd/system/user.service
+
+- name: Enamble/Start {{COMPONENT}} services
+  systemd:
+    daemon_reload: yes
+    enabled: yes
+    name: user
+    state: restarted 

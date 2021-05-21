@@ -1,0 +1,10 @@
+- name: Setup RoboShop Project
+  hosts: all
+  vars:
+    DOMAIN: jithendar.com
+  become: yes
+  
+  tasks:
+    - name: Load user Role
+      import_role:
+        name: user
